@@ -49,11 +49,14 @@ async function run() {
   async function interval(microSeconds: number) {
     for (;;) {
       await new Promise((resolve) => setTimeout(resolve, microSeconds));
-      await main();
+      try {
+        await main();
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
   }
 
-  //await main();
   await interval(5000);
 }
 
