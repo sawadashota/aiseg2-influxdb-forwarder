@@ -15,26 +15,11 @@ type MetricsElement = {
   value: number;
 };
 
-export class AiSEG2 {
-  private readonly host: string;
-  private readonly useHTTPS: boolean;
-  private readonly client: DigestClient;
-
-  constructor(host: string, user: string, password: string, useHTTPS = false) {
-    if (host === '') {
-      throw new AiSEG2Error('AiSEG2 のホストが指定されていません。');
-    }
-    if (user === '') {
-      throw new AiSEG2Error('AiSEG2 のログインユーザー名が指定されていません。');
-    }
-    if (password === '') {
-      throw new AiSEG2Error('AiSEG2 のログインパスワードが指定されていません。');
-    }
-
-    this.host = host;
-    this.useHTTPS = useHTTPS;
-    this.client = new DigestClient(user, password, { algorithm: 'MD5' });
-  }
+export class PowerClient {
+  constructor(
+    private readonly baseURL: string,
+    private readonly client: DigestClient,
+  ) {}
 
   private getNumericValue(input: string | null | undefined): number {
     if (input === undefined || input === null) return 0;
@@ -45,12 +30,10 @@ export class AiSEG2 {
   }
 
   async getPowerSummary(): Promise<PowerSummary> {
-    const response = await this.client.fetch(
-      `${this.useHTTPS ? 'https' : 'http'}://${this.host}/page/electricflow/111`,
-    );
+    const response = await this.client.fetch(`${this.baseURL}/page/electricflow/111`);
     const body = await response.text();
 
-    const dom = await new JSDOM(body);
+    const dom = new JSDOM(body);
     const document = dom.window.document;
 
     const totalGenerationPowerKW: MetricsElement = {
@@ -97,11 +80,11 @@ export class AiSEG2 {
 
     do {
       const response = await this.client.fetch(
-        `${this.useHTTPS ? 'https' : 'http'}://${this.host}/page/electricflow/1113?id=${pageCount}`,
+        `${this.baseURL}/page/electricflow/1113?id=${pageCount}`,
       );
       const body = await response.text();
 
-      const dom = await new JSDOM(body);
+      const dom = new JSDOM(body);
       const document = dom.window.document;
 
       // 重複ページかどうかチェック
@@ -132,11 +115,5 @@ export class AiSEG2 {
     } while (pageCount <= maxCount);
 
     return usagePowerItems;
-  }
-}
-
-class AiSEG2Error extends Error {
-  static {
-    this.prototype.name = 'AiSEG2Error';
   }
 }

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { AiSEG2 } from './AiSEG2';
+import { AiSEG2, AiSEG2Error } from './aiseg2';
 import { Config } from './Config';
 import { Influx } from './Influx';
 
@@ -29,11 +29,14 @@ async function run() {
     // AiSEG2 からデータを取得
     const aiseg2 = new AiSEG2(aiseg2Host, aiseg2User, aiseg2Password, aiseg2UseHTTPS);
 
-    const powerSummary = await aiseg2.getPowerSummary();
+    const powerSummary = await aiseg2.power.getPowerSummary();
     console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'powerSummary', powerSummary);
 
-    const detailsUsagePower = await aiseg2.getDetailsUsagePower();
+    const detailsUsagePower = await aiseg2.power.getDetailsUsagePower();
     console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'detailsUsagePower', detailsUsagePower);
+
+    const climates = await aiseg2.climate.getClimates();
+    console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'climates', climates);
 
     // influxdb へデータを送信
     const influx = new Influx(
@@ -43,7 +46,7 @@ async function run() {
       influxdbBucket,
       influxdbUseHTTPS,
     );
-    influx.writePower(powerSummary, detailsUsagePower);
+    influx.writePower(powerSummary, detailsUsagePower, climates);
   }
 
   async function interval(microSeconds: number) {
@@ -52,7 +55,12 @@ async function run() {
       try {
         await main();
       } catch (error) {
-        console.error('Error:', error);
+        if (error instanceof AiSEG2Error) {
+          console.error(`AiSEG2 Error: ${error.message}. Retry after 5 seconds.`);
+        } else {
+          console.error('Unexpected Error:', error);
+          throw error;
+        }
       }
     }
   }
