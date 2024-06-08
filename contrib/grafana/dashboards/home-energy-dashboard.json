@@ -69,9 +69,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -138,15 +136,9 @@
                     "field": "summary",
                     "fieldSrc": "field",
                     "operator": "equal",
-                    "value": [
-                      "総消費電力(kW)"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "text"
-                    ]
+                    "value": ["総消費電力(kW)"],
+                    "valueSrc": ["value"],
+                    "valueType": ["text"]
                   },
                   "type": "rule"
                 }
@@ -212,9 +204,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -278,15 +268,9 @@
                     "field": "summary",
                     "fieldSrc": "field",
                     "operator": "equal",
-                    "value": [
-                      "総発電電力(kW)"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "text"
-                    ]
+                    "value": ["総発電電力(kW)"],
+                    "valueSrc": ["value"],
+                    "valueType": ["text"]
                   },
                   "type": "rule"
                 }
@@ -344,9 +328,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -410,15 +392,9 @@
                     "field": "summary",
                     "fieldSrc": "field",
                     "operator": "equal",
-                    "value": [
-                      "売買電力(kW)"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "text"
-                    ]
+                    "value": ["売買電力(kW)"],
+                    "valueSrc": ["value"],
+                    "valueType": ["text"]
                   },
                   "type": "rule"
                 }
@@ -560,15 +536,9 @@
                     "field": "summary",
                     "fieldSrc": "field",
                     "operator": "equal",
-                    "value": [
-                      "売買電力(kW)"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "text"
-                    ]
+                    "value": ["売買電力(kW)"],
+                    "valueSrc": ["value"],
+                    "valueType": ["text"]
                   },
                   "type": "rule"
                 }
@@ -639,9 +609,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -705,15 +673,9 @@
                     "field": "summary",
                     "fieldSrc": "field",
                     "operator": "equal",
-                    "value": [
-                      "売買電力(kW)"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "text"
-                    ]
+                    "value": ["売買電力(kW)"],
+                    "valueSrc": ["value"],
+                    "valueType": ["text"]
                   },
                   "type": "rule"
                 }
@@ -771,9 +733,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -837,15 +797,9 @@
                     "field": "summary",
                     "fieldSrc": "field",
                     "operator": "equal",
-                    "value": [
-                      "売買電力(kW)"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "text"
-                    ]
+                    "value": ["売買電力(kW)"],
+                    "valueSrc": ["value"],
+                    "valueType": ["text"]
                   },
                   "type": "rule"
                 }
@@ -968,9 +922,7 @@
       "id": 19,
       "options": {
         "legend": {
-          "calcs": [
-            "last"
-          ],
+          "calcs": ["last"],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
@@ -1029,15 +981,9 @@
                     "field": "\"detail-type\"",
                     "fieldSrc": "field",
                     "operator": "equal",
-                    "value": [
-                      "generation"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "text"
-                    ]
+                    "value": ["generation"],
+                    "valueSrc": ["value"],
+                    "valueType": ["text"]
                   },
                   "type": "rule"
                 }
@@ -1194,15 +1140,9 @@
                     "field": "summary",
                     "fieldSrc": "field",
                     "operator": "equal",
-                    "value": [
-                      "総消費電力(kW)"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "text"
-                    ]
+                    "value": ["総消費電力(kW)"],
+                    "valueSrc": ["value"],
+                    "valueType": ["text"]
                   },
                   "type": "rule"
                 },
@@ -1368,15 +1308,9 @@
                     "field": "summary",
                     "fieldSrc": "field",
                     "operator": "equal",
-                    "value": [
-                      "総発電電力(kW)"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "text"
-                    ]
+                    "value": ["総発電電力(kW)"],
+                    "valueSrc": ["value"],
+                    "valueType": ["text"]
                   },
                   "type": "rule"
                 },
@@ -1529,15 +1463,9 @@
                     "field": "summary",
                     "fieldSrc": "field",
                     "operator": "equal",
-                    "value": [
-                      "売買電力(kW)"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "text"
-                    ]
+                    "value": ["売買電力(kW)"],
+                    "valueSrc": ["value"],
+                    "valueType": ["text"]
                   },
                   "type": "rule"
                 },
@@ -1690,15 +1618,9 @@
                     "field": "\"detail-type\"",
                     "fieldSrc": "field",
                     "operator": "equal",
-                    "value": [
-                      "generation"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "text"
-                    ]
+                    "value": ["generation"],
+                    "valueSrc": ["value"],
+                    "valueType": ["text"]
                   },
                   "type": "rule"
                 }
@@ -1839,15 +1761,9 @@
                     "field": "\"detail-type\"",
                     "fieldSrc": "field",
                     "operator": "equal",
-                    "value": [
-                      "generation"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "text"
-                    ]
+                    "value": ["generation"],
+                    "valueSrc": ["value"],
+                    "valueType": ["text"]
                   },
                   "type": "rule"
                 }
@@ -1876,12 +1792,7 @@
   },
   "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {
-    "refresh_intervals": [
-      "5s",
-      "10s",
-      "30s",
-      "1m"
-    ]
+    "refresh_intervals": ["5s", "10s", "30s", "1m"]
   },
   "timezone": "browser",
   "title": "Home Energy",
