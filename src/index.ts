@@ -1,7 +1,13 @@
 import dayjs from 'dayjs';
 import { AiSEG2, AiSEG2Error } from './aiseg2';
 import { Config } from './Config';
-import { Influx, PowerSummaryPointer, DetailUsagePowerPointer, ClimatesPointer } from './influxdb';
+import {
+  Influx,
+  PowerSummaryPointer,
+  DetailUsagePowerPointer,
+  ClimatesPointer,
+  DailyTotalTotalPointer,
+} from './influxdb';
 
 Config.checkEnvFile();
 
@@ -30,12 +36,15 @@ const influx = new Influx(
   influxdbBucket,
   influxdbUseHTTPS,
 );
+const aiseg2 = new AiSEG2(aiseg2Host, aiseg2User, aiseg2Password, aiseg2UseHTTPS);
 
-async function run() {
+async function run(): Promise<void> {
+  await Promise.all([stat(), total()]);
+  return Promise.resolve();
+}
+
+async function stat(): Promise<void> {
   async function main(now = dayjs()) {
-    // AiSEG2 からデータを取得
-    const aiseg2 = new AiSEG2(aiseg2Host, aiseg2User, aiseg2Password, aiseg2UseHTTPS);
-
     const powerSummary = await aiseg2.power.getPowerSummary();
     console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'powerSummary', powerSummary);
 
@@ -55,7 +64,6 @@ async function run() {
 
   async function interval(microSeconds: number) {
     for (;;) {
-      await new Promise((resolve) => setTimeout(resolve, microSeconds));
       try {
         await main();
       } catch (error) {
@@ -65,10 +73,81 @@ async function run() {
           console.error(`Unexpected Error: ${typeof error}: ${error}`);
         }
       }
+      await new Promise((resolve) => setTimeout(resolve, microSeconds));
     }
   }
 
   await interval(5000);
+}
+
+async function total(): Promise<void> {
+  async function main(now = dayjs()) {
+    now = now.startOf('day');
+    const dailyTotalPowerGeneration =
+      await aiseg2.dailyTotalPowerGeneration.getDailyTotalPower(now);
+    console.log(
+      now.format('YYYY-MM-DD HH:mm:ss'),
+      'dailyTotalPowerGeneration',
+      dailyTotalPowerGeneration,
+    );
+
+    const dailyTotalPowerBuying = await aiseg2.dailyTotalPowerBuying.getDailyTotalPower(now);
+    console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'dailyTotalPowerBuying', dailyTotalPowerBuying);
+
+    const dailyTotalPowerSelling = await aiseg2.dailyTotalPowerSelling.getDailyTotalPower(now);
+    console.log(
+      now.format('YYYY-MM-DD HH:mm:ss'),
+      'dailyTotalPowerSelling',
+      dailyTotalPowerSelling,
+    );
+
+    const dailyTotalPowerUsage = await aiseg2.dailyTotalPowerUsage.getDailyTotalPower(now);
+    console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'dailyTotalPowerUsage', dailyTotalPowerUsage);
+
+    const dailyTotalHotWaterUsage = await aiseg2.dailyTotalHotWaterUsage.getDailyTotalPower(now);
+    console.log(
+      now.format('YYYY-MM-DD HH:mm:ss'),
+      'dailyTotalHotWaterUsage',
+      dailyTotalHotWaterUsage,
+    );
+
+    const dailyTotalGasUsage = await aiseg2.dailyTotalGasUsage.getDailyTotalPower(now);
+    console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'dailyTotalGasUsage', dailyTotalGasUsage);
+
+    // influxdb へデータを送信
+    influx.write([
+      new DailyTotalTotalPointer([
+        dailyTotalPowerGeneration,
+        dailyTotalPowerBuying,
+        dailyTotalPowerSelling,
+        dailyTotalPowerUsage,
+        dailyTotalHotWaterUsage,
+        dailyTotalGasUsage,
+      ]),
+    ]);
+  }
+
+  async function interval(microSeconds: number) {
+    for (;;) {
+      try {
+        await main();
+      } catch (error) {
+        if (error instanceof AiSEG2Error) {
+          console.error(`AiSEG2 Error: ${error.message}. Retry after 10 seconds.`);
+        } else {
+          console.error(`Unexpected Error: ${typeof error}: ${error}`);
+        }
+      }
+      await new Promise((resolve) => setTimeout(resolve, microSeconds));
+    }
+  }
+
+  // 過去のデータを取得
+  for (let i = 1; i <= 30; i++) {
+    await main(dayjs().subtract(i, 'day'));
+  }
+
+  await interval(10000);
 }
 
 const cleanup = async () => {

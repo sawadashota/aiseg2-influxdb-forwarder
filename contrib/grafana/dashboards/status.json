@@ -1795,7 +1795,7 @@
     "refresh_intervals": ["5s", "10s", "30s", "1m"]
   },
   "timezone": "browser",
-  "title": "AiSEG2",
+  "title": "AiSEG2 - Status",
   "uid": "edm5kbv1nk4qof",
   "version": 1
 }
