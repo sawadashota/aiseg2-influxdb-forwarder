@@ -99,6 +99,4 @@ process.on('exit', (code) => {
   console.log(`Process exit with code: ${code}`);
 });
 
-run()
-  .then(() => console.log('done'))
-  .finally(exit);
+run().finally(exit);
