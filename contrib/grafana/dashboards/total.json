@@ -94,7 +94,7 @@
         ]
       },
       "gridPos": {
-        "h": 9,
+        "h": 8,
         "w": 19,
         "x": 0,
         "y": 0
@@ -102,9 +102,7 @@
       "id": 1,
       "options": {
         "legend": {
-          "calcs": [
-            "last"
-          ],
+          "calcs": ["last"],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
@@ -139,6 +137,7 @@
             "fixedColor": "yellow",
             "mode": "fixed"
           },
+          "displayName": "利用合計",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -155,14 +154,22 @@
           {
             "matcher": {
               "id": "byFrameRefID",
-              "options": "Usage"
+              "options": "利用率"
             },
             "properties": [
               {
+                "id": "displayName",
+                "value": "利用率"
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
                 "id": "color",
                 "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
+                  "fixedColor": "text",
+                  "mode": "shades"
                 }
               }
             ]
@@ -170,21 +177,19 @@
         ]
       },
       "gridPos": {
-        "h": 9,
+        "h": 8,
         "w": 5,
         "x": 19,
         "y": 0
       },
-      "id": 8,
+      "id": 11,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -199,11 +204,32 @@
             "type": "influxdb",
             "uid": "P34B2CB18CBE8638D"
           },
+          "hide": false,
           "query": "from(bucket: v.defaultBucket)\n    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"_measurement\"] == \"circuit_daily_total\")\n  |> filter(fn: (r) => r[\"detail-section\"] == \"電力使用量(EV)(kWh)\")\n  |> aggregateWindow(every: 1d, fn: max)\n  |> sum()\n  |> yield(name: \"max\")\n",
           "refId": "EV"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P34B2CB18CBE8638D"
+          },
+          "hide": true,
+          "query": "from(bucket: v.defaultBucket)\n    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"_measurement\"] == \"daily_total\")\n  |> filter(fn: (r) => r[\"detail-section\"] == \"使用電力量(kWh)\")\n  |> aggregateWindow(every: 1d, fn: max)\n  |> sum()\n  |> yield(name: \"sum\")\n",
+          "refId": "Usage"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$EV / $Usage",
+          "hide": false,
+          "refId": "利用率",
+          "type": "math"
         }
       ],
-      "title": "使用電力量(EV) - 期間合計",
+      "title": "使用電力量(EV)",
       "type": "stat"
     },
     {
@@ -280,17 +306,15 @@
         ]
       },
       "gridPos": {
-        "h": 9,
-        "w": 24,
+        "h": 8,
+        "w": 19,
         "x": 0,
-        "y": 9
+        "y": 8
       },
       "id": 7,
       "options": {
         "legend": {
-          "calcs": [
-            "last"
-          ],
+          "calcs": ["last"],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
@@ -322,6 +346,96 @@
       ],
       "title": "発電量 / 使用電力量",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P34B2CB18CBE8638D"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "light-blue",
+            "mode": "fixed"
+          },
+          "displayName": "発電量",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "Usage"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "使用電力量"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 5,
+        "x": 19,
+        "y": 8
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P34B2CB18CBE8638D"
+          },
+          "hide": false,
+          "query": "from(bucket: v.defaultBucket)\n    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"_measurement\"] == \"daily_total\")\n  |> filter(fn: (r) => r[\"detail-section\"] == \"使用電力量(kWh)\")\n  |> aggregateWindow(every: 1d, fn: max)\n  |> sum()\n  |> yield(name: \"sum\")\n",
+          "refId": "Usage"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P34B2CB18CBE8638D"
+          },
+          "query": "from(bucket: v.defaultBucket)\n    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"_measurement\"] == \"daily_total\")\n  |> filter(fn: (r) => r[\"detail-section\"] == \"発電量(kWh)\")\n  |> aggregateWindow(every: 1d, fn: max)\n  |> sum()\n  |> yield(name: \"sum\")\n",
+          "refId": "Generation"
+        }
+      ],
+      "title": "発電量 / 使用電力量",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -403,9 +517,9 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 24,
+        "w": 19,
         "x": 0,
-        "y": 18
+        "y": 16
       },
       "id": 3,
       "options": {
@@ -442,6 +556,96 @@
       ],
       "title": "買電量 / 売電量",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P34B2CB18CBE8638D"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "semi-dark-red",
+            "mode": "fixed"
+          },
+          "displayName": "買電量",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "Sell"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-blue",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "売電量"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 5,
+        "x": 19,
+        "y": 16
+      },
+      "id": 10,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P34B2CB18CBE8638D"
+          },
+          "hide": false,
+          "query": "from(bucket: v.defaultBucket)\n    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"_measurement\"] == \"daily_total\")\n  |> filter(fn: (r) => r[\"detail-section\"] == \"買電量(kWh)\")\n  |> aggregateWindow(every: 1d, fn: max)\n  |> sum()\n  |> yield(name: \"sum\")\n",
+          "refId": "Buy"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P34B2CB18CBE8638D"
+          },
+          "query": "from(bucket: v.defaultBucket)\n    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"_measurement\"] == \"daily_total\")\n  |> filter(fn: (r) => r[\"detail-section\"] == \"売電量(kWh)\")\n  |> aggregateWindow(every: 1d, fn: max)\n  |> sum()\n  |> yield(name: \"sum\")\n",
+          "refId": "Sell"
+        }
+      ],
+      "title": "買電量 / 売電量",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -492,7 +696,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 26
+        "y": 24
       },
       "id": 6,
       "options": {
@@ -579,7 +783,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 26
+        "y": 24
       },
       "id": 4,
       "options": {
@@ -630,12 +834,7 @@
   },
   "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {
-    "refresh_intervals": [
-      "5s",
-      "10s",
-      "30s",
-      "1m"
-    ]
+    "refresh_intervals": ["5s", "10s", "30s", "1m"]
   },
   "timezone": "browser",
   "title": "AiSEG2 - Total",
