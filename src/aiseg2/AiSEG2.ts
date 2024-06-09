@@ -10,6 +10,7 @@ import {
   DailyTotalPowerSellingClient,
   DailyTotalPowerUsageClient,
 } from './DailyTotalClient';
+import { CircuitDailyTotalPowerUsageEVClient } from './CircuitDailyTotalClient';
 
 export class AiSEG2 {
   public readonly power: PowerClient;
@@ -20,6 +21,7 @@ export class AiSEG2 {
   public readonly dailyTotalPowerSelling: DailyTotalPowerSellingClient;
   public readonly dailyTotalHotWaterUsage: DailyTotalHotWaterUsageClient;
   public readonly dailyTotalGasUsage: DailyTotalGasUsageClient;
+  public readonly circuitDailyTotalPowerUsageEV: CircuitDailyTotalPowerUsageEVClient;
 
   constructor(host: string, user: string, password: string, useHTTPS = false) {
     if (host === '') {
@@ -43,5 +45,6 @@ export class AiSEG2 {
     this.dailyTotalPowerSelling = new DailyTotalPowerSellingClient(baseURL, client);
     this.dailyTotalHotWaterUsage = new DailyTotalHotWaterUsageClient(baseURL, client);
     this.dailyTotalGasUsage = new DailyTotalGasUsageClient(baseURL, client);
+    this.circuitDailyTotalPowerUsageEV = new CircuitDailyTotalPowerUsageEVClient(baseURL, client);
   }
 }

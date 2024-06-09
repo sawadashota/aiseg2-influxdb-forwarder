@@ -40,7 +40,7 @@ abstract class DailyTotalClient {
     return Number(array.join(''));
   }
 
-  async getDailyTotalPower(date: dayjs.Dayjs): Promise<DailyTotal> {
+  async getDailyTotal(date: dayjs.Dayjs): Promise<DailyTotal> {
     const response = await this.client.fetch(
       `${this.baseURL}/page/graph/${this.option.graphId}?data=${this.makeDataQuery(date)}`,
     );

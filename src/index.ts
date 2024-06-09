@@ -8,6 +8,7 @@ import {
   ClimatesPointer,
   DailyTotalTotalPointer,
 } from './influxdb';
+import { CircuitDailyTotalTotalPointer } from './influxdb/circuit_daily_total';
 
 Config.checkEnvFile();
 
@@ -83,35 +84,34 @@ async function stat(): Promise<void> {
 async function total(): Promise<void> {
   async function main(now = dayjs()) {
     now = now.startOf('day');
-    const dailyTotalPowerGeneration =
-      await aiseg2.dailyTotalPowerGeneration.getDailyTotalPower(now);
+    const dailyTotalPowerGeneration = await aiseg2.dailyTotalPowerGeneration.getDailyTotal(now);
     console.log(
       now.format('YYYY-MM-DD HH:mm:ss'),
       'dailyTotalPowerGeneration',
       dailyTotalPowerGeneration,
     );
 
-    const dailyTotalPowerBuying = await aiseg2.dailyTotalPowerBuying.getDailyTotalPower(now);
+    const dailyTotalPowerBuying = await aiseg2.dailyTotalPowerBuying.getDailyTotal(now);
     console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'dailyTotalPowerBuying', dailyTotalPowerBuying);
 
-    const dailyTotalPowerSelling = await aiseg2.dailyTotalPowerSelling.getDailyTotalPower(now);
+    const dailyTotalPowerSelling = await aiseg2.dailyTotalPowerSelling.getDailyTotal(now);
     console.log(
       now.format('YYYY-MM-DD HH:mm:ss'),
       'dailyTotalPowerSelling',
       dailyTotalPowerSelling,
     );
 
-    const dailyTotalPowerUsage = await aiseg2.dailyTotalPowerUsage.getDailyTotalPower(now);
+    const dailyTotalPowerUsage = await aiseg2.dailyTotalPowerUsage.getDailyTotal(now);
     console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'dailyTotalPowerUsage', dailyTotalPowerUsage);
 
-    const dailyTotalHotWaterUsage = await aiseg2.dailyTotalHotWaterUsage.getDailyTotalPower(now);
+    const dailyTotalHotWaterUsage = await aiseg2.dailyTotalHotWaterUsage.getDailyTotal(now);
     console.log(
       now.format('YYYY-MM-DD HH:mm:ss'),
       'dailyTotalHotWaterUsage',
       dailyTotalHotWaterUsage,
     );
 
-    const dailyTotalGasUsage = await aiseg2.dailyTotalGasUsage.getDailyTotalPower(now);
+    const dailyTotalGasUsage = await aiseg2.dailyTotalGasUsage.getDailyTotal(now);
     console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'dailyTotalGasUsage', dailyTotalGasUsage);
 
     // influxdb へデータを送信
@@ -125,6 +125,16 @@ async function total(): Promise<void> {
         dailyTotalGasUsage,
       ]),
     ]);
+
+    const dailyTotalPowerUsageEV =
+      await aiseg2.circuitDailyTotalPowerUsageEV.getCircuitDailyTotal(now);
+    console.log(
+      now.format('YYYY-MM-DD HH:mm:ss'),
+      'dailyTotalPowerUsageEV',
+      dailyTotalPowerUsageEV,
+    );
+
+    influx.write([new CircuitDailyTotalTotalPointer([dailyTotalPowerUsageEV])]);
   }
 
   async function interval(microSeconds: number) {
@@ -143,7 +153,8 @@ async function total(): Promise<void> {
   }
 
   // 過去のデータを取得
-  for (let i = 1; i <= 30; i++) {
+  const days = 30;
+  for (let i = 1; i <= days; i++) {
     await main(dayjs().subtract(i, 'day'));
   }
 
