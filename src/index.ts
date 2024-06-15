@@ -7,6 +7,7 @@ import {
   DetailUsagePowerPointer,
   ClimatesPointer,
   DailyTotalTotalPointer,
+  SmartMeterPointer,
 } from './influxdb';
 import { CircuitDailyTotalTotalPointer } from './influxdb/circuit_daily_total';
 
@@ -55,11 +56,15 @@ async function stat(): Promise<void> {
     const climates = await aiseg2.climate.getClimates();
     console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'climates', climates);
 
+    const smartMeter = await aiseg2.smartMeter.getSmartMeter();
+    console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'smartMeter', smartMeter);
+
     // influxdb へデータを送信
     influx.write([
       new PowerSummaryPointer(powerSummary),
       new DetailUsagePowerPointer(detailsUsagePower),
       new ClimatesPointer(climates),
+      new SmartMeterPointer(smartMeter),
     ]);
   }
 
