@@ -356,16 +356,11 @@
       "pluginVersion": "11.0.0",
       "targets": [
         {
+          "dataset": "iox",
           "datasource": {
             "type": "influxdb",
             "uid": "P34B2CB18CBE8638D"
           },
-          "hide": false,
-          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"SmartMeter\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> group(columns: [\"detail-type\"])\n  |> last()",
-          "refId": "SmartMeter"
-        },
-        {
-          "dataset": "iox",
           "editorMode": "builder",
           "format": "table",
           "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"power\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"summary\"] == \"売買電力(kW)\")\n  |> group(columns: [\"summary\"])\n  |> last()",
@@ -430,6 +425,15 @@
             "whereString": "summary = '売買電力(kW)'"
           },
           "table": "power"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P34B2CB18CBE8638D"
+          },
+          "hide": false,
+          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"SmartMeter\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> group(columns: [\"detail-type\"])\n  |> last()",
+          "refId": "SmartMeter"
         }
       ],
       "title": "売買電力",
@@ -1800,7 +1804,7 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-30m",
     "to": "now"
   },
   "timeRangeUpdatedDuringEditOrView": false,
@@ -1810,6 +1814,6 @@
   "timezone": "browser",
   "title": "AiSEG2 - Status",
   "uid": "edm5kbv1nk4qof",
-  "version": 4,
+  "version": 6,
   "weekStart": ""
 }

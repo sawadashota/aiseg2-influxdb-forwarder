@@ -26,7 +26,7 @@ export class SmartMeterClient {
     const text = el.textContent!.trim();
     const matches = text.match(/^(\d+)([A-Za-z]{1,2})\s+(.+)$/);
     if (!matches || matches.length !== 4) {
-      throw new Error('No matches found');
+      throw new Error(`No matches found text: ${text} matches: ${matches}`);
     }
     let value = parseInt(matches[1].trim()); // Extract the value (e.g., "100")
     const unit = matches[2].trim(); // Extract the unit (e.g., "W")

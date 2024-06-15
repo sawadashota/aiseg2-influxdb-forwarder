@@ -10,6 +10,7 @@ import {
   SmartMeterPointer,
 } from './influxdb';
 import { CircuitDailyTotalTotalPointer } from './influxdb/circuit_daily_total';
+import { Pointer } from './influxdb/Influx';
 
 Config.checkEnvFile();
 
@@ -47,25 +48,41 @@ async function run(): Promise<void> {
 
 async function stat(): Promise<void> {
   async function main(now = dayjs()) {
-    const powerSummary = await aiseg2.power.getPowerSummary();
-    console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'powerSummary', powerSummary);
+    const pointers: Pointer[] = [];
 
-    const detailsUsagePower = await aiseg2.power.getDetailsUsagePower();
-    console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'detailsUsagePower', detailsUsagePower);
+    try {
+      const powerSummary = await aiseg2.power.getPowerSummary();
+      console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'powerSummary', powerSummary);
+      pointers.push(new PowerSummaryPointer(powerSummary));
+    } catch (error) {
+      console.error(`failed to get powerSummary: ${error}`);
+    }
 
-    const climates = await aiseg2.climate.getClimates();
-    console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'climates', climates);
+    try {
+      const detailsUsagePower = await aiseg2.power.getDetailsUsagePower();
+      console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'detailsUsagePower', detailsUsagePower);
+      pointers.push(new DetailUsagePowerPointer(detailsUsagePower));
+    } catch (error) {
+      console.error(`failed to get detailsUsagePower: ${error}`);
+    }
 
-    const smartMeter = await aiseg2.smartMeter.getSmartMeter();
-    console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'smartMeter', smartMeter);
+    try {
+      const climates = await aiseg2.climate.getClimates();
+      console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'climates', climates);
+      pointers.push(new ClimatesPointer(climates));
+    } catch (error) {
+      console.error(`failed to get climates: ${error}`);
+    }
 
+    try {
+      const smartMeter = await aiseg2.smartMeter.getSmartMeter();
+      console.log(now.format('YYYY-MM-DD HH:mm:ss'), 'smartMeter', smartMeter);
+      pointers.push(new SmartMeterPointer(smartMeter));
+    } catch (error) {
+      console.error(`failed to get smartMeter: ${error}`);
+    }
     // influxdb へデータを送信
-    influx.write([
-      new PowerSummaryPointer(powerSummary),
-      new DetailUsagePowerPointer(detailsUsagePower),
-      new ClimatesPointer(climates),
-      new SmartMeterPointer(smartMeter),
-    ]);
+    influx.write(pointers);
   }
 
   async function interval(microSeconds: number) {
