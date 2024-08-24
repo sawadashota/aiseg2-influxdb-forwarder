@@ -74,3 +74,36 @@ export class CircuitDailyTotalPowerUsageEVClient extends CircuitDailyTotalClient
     });
   }
 }
+
+export class CircuitDailyTotalPowerUsageLivingACClient extends CircuitDailyTotalClient {
+  constructor(baseURL: string, client: DigestClient) {
+    super(baseURL, client, {
+      name: 'リビングエアコン',
+      circuitId: '27',
+      unit: 'kWh',
+      valueHtmlId: 'val_kwh',
+    });
+  }
+}
+
+export class CircuitDailyTotalPowerUsageMasterRoomACClient extends CircuitDailyTotalClient {
+  constructor(baseURL: string, client: DigestClient) {
+    super(baseURL, client, {
+      name: '主寝室エアコン',
+      circuitId: '26',
+      unit: 'kWh',
+      valueHtmlId: 'val_kwh',
+    });
+  }
+}
+
+export class CircuitDailyTotalPowerUsageRoom2ACClient extends CircuitDailyTotalClient {
+  constructor(baseURL: string, client: DigestClient) {
+    super(baseURL, client, {
+      name: '洋室２エアコン',
+      circuitId: '25',
+      unit: 'kWh',
+      valueHtmlId: 'val_kwh',
+    });
+  }
+}

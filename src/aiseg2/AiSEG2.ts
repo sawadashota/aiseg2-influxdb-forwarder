@@ -10,7 +10,12 @@ import {
   DailyTotalPowerSellingClient,
   DailyTotalPowerUsageClient,
 } from './DailyTotalClient';
-import { CircuitDailyTotalPowerUsageEVClient } from './CircuitDailyTotalClient';
+import {
+  CircuitDailyTotalPowerUsageEVClient,
+  CircuitDailyTotalPowerUsageLivingACClient,
+  CircuitDailyTotalPowerUsageMasterRoomACClient,
+  CircuitDailyTotalPowerUsageRoom2ACClient
+} from './CircuitDailyTotalClient';
 import { SmartMeterClient } from './SmartMeterClient';
 
 export class AiSEG2 {
@@ -23,6 +28,9 @@ export class AiSEG2 {
   public readonly dailyTotalHotWaterUsage: DailyTotalHotWaterUsageClient;
   public readonly dailyTotalGasUsage: DailyTotalGasUsageClient;
   public readonly circuitDailyTotalPowerUsageEV: CircuitDailyTotalPowerUsageEVClient;
+  public readonly circuitDailyTotalPowerUsageLivingACClient: CircuitDailyTotalPowerUsageLivingACClient;
+  public readonly circuitDailyTotalPowerUsageMasterRoomACClient: CircuitDailyTotalPowerUsageMasterRoomACClient;
+  public readonly circuitDailyTotalPowerUsageRoom2ACClient: CircuitDailyTotalPowerUsageRoom2ACClient;
   public readonly smartMeter: SmartMeterClient;
 
   constructor(host: string, user: string, password: string, useHTTPS = false) {
@@ -48,6 +56,16 @@ export class AiSEG2 {
     this.dailyTotalHotWaterUsage = new DailyTotalHotWaterUsageClient(baseURL, client);
     this.dailyTotalGasUsage = new DailyTotalGasUsageClient(baseURL, client);
     this.circuitDailyTotalPowerUsageEV = new CircuitDailyTotalPowerUsageEVClient(baseURL, client);
+    this.circuitDailyTotalPowerUsageLivingACClient = new CircuitDailyTotalPowerUsageLivingACClient(
+      baseURL,
+      client,
+    );
+    this.circuitDailyTotalPowerUsageMasterRoomACClient =
+      new CircuitDailyTotalPowerUsageMasterRoomACClient(baseURL, client);
+    this.circuitDailyTotalPowerUsageRoom2ACClient = new CircuitDailyTotalPowerUsageRoom2ACClient(
+      baseURL,
+      client,
+    );
     this.smartMeter = new SmartMeterClient(baseURL, client);
   }
 }

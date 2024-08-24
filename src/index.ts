@@ -155,8 +155,36 @@ async function total(): Promise<void> {
       'dailyTotalPowerUsageEV',
       dailyTotalPowerUsageEV,
     );
+    const dailyTotalPowerUsageLivingAC =
+      await aiseg2.circuitDailyTotalPowerUsageLivingACClient.getCircuitDailyTotal(now);
+    console.log(
+      now.format('YYYY-MM-DD HH:mm:ss'),
+      'dailyTotalPowerUsageLivingAC',
+      dailyTotalPowerUsageLivingAC,
+    );
+    const dailyTotalPowerUsageMasterRoomAC =
+      await aiseg2.circuitDailyTotalPowerUsageMasterRoomACClient.getCircuitDailyTotal(now);
+    console.log(
+      now.format('YYYY-MM-DD HH:mm:ss'),
+      'dailyTotalPowerUsageMasterRoomAC',
+      dailyTotalPowerUsageMasterRoomAC,
+    );
+    const dailyTotalPowerUsageRoom2AC =
+      await aiseg2.circuitDailyTotalPowerUsageRoom2ACClient.getCircuitDailyTotal(now);
+    console.log(
+      now.format('YYYY-MM-DD HH:mm:ss'),
+      'dailyTotalPowerUsageRoom2AC',
+      dailyTotalPowerUsageRoom2AC,
+    );
 
-    influx.write([new CircuitDailyTotalTotalPointer([dailyTotalPowerUsageEV])]);
+    influx.write([
+      new CircuitDailyTotalTotalPointer([
+        dailyTotalPowerUsageEV,
+        dailyTotalPowerUsageLivingAC,
+        dailyTotalPowerUsageMasterRoomAC,
+        dailyTotalPowerUsageRoom2AC,
+      ]),
+    ]);
   }
 
   async function interval(microSeconds: number) {
