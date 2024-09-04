@@ -12,7 +12,6 @@
         pkgs = import nixpkgs {
           inherit system;
         };
-        rootDir = "${self}/..";
       in
       {
         formatter = pkgs.nixpkgs-fmt;
