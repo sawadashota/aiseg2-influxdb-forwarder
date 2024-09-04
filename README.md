@@ -11,8 +11,8 @@
 下記環境で動作確認をしています。作者自宅の機材でしか動作確認していないため、それ以外の環境の動作は保証できません。
 
 - 実行環境
-  - Ubuntu `22.04`
-  - Node.js `20.11.0`
+  - Nix `2.18.5`
+  - System `aarch64-darwin`
 - AiSEG2
   - 本体型番 `MKN713`
   - ファームウェア `Ver.2.97I-01`
@@ -48,7 +48,7 @@ AiSEG2 はそのままでは HTTP しか喋らないため、LAN など境界内
 ホスト環境の適当な作業ディレクトリで本リポジトリをクローンします。
 
 ```sh
-git clone https://github.com/shimosyan/aiseg2-influxdb.git
+git clone https://github.com/sawadashota/aiseg2-influxdb.git
 ```
 
 リポジトリ内に入ります。
@@ -60,7 +60,7 @@ cd ./aiseg2-influxdb
 依存パッケージをインストールします。
 
 ```sh
-npm ci
+make nix-setup
 ```
 
 設定ファイル（`.env`）をサンプルファイルからコピーしてご利用の環境に合わせて設定値を入れます。
@@ -74,41 +74,5 @@ cp .env.sample .env
 以下のコマンドで起動することができます。
 
 ```sh
-npm run script
-```
-
-### ツールのデーモン化について
-
-下記コマンドで Node.js の [forever](https://www.npmjs.com/package/forever) ライブラリを使ったデーモン化ができます
-
-```sh
-# 開始
-npm start
-
-# 停止
-npm stop
-```
-
-ただし、環境によってはうまく動かないので `npm run script` を `systemd` 化するなど適宜対応してください。
-
-#### `systemd` のサンプルファイル
-
-`/etc/systemd/system/aiseg2-influxdb.service`
-
-```ini
-[Unit]
-Description=aiseg2-influxdb
-After=syslog.target network.target
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/npm run script
-WorkingDirectory=/home/ec2-user/aiseg2-influxdb
-KillMode=process
-Restart=always
-User=ec2-user
-Group=ec2-user
-
-[Install]
-WantedBy=multi-user.target
+make nix-start
 ```

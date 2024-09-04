@@ -8,16 +8,20 @@ GRAFANA_HOME := $(GRAFANA_PATH)/share/grafana
 export GRAFANA_HOME
 export GF_PATHS_PROVISIONING=$(ROOT_DIR)/contrib/grafana
 
-.PHONY: start
-start: ## Start the application in a Nix shell
-	nix develop --command bash -c "make start-app"
+.PHONY: nix-start
+nix-start: ## Start the application in a Nix shell
+	nix develop --command bash -c "make start"
+
+.PHONY: nix-setup
+nix-setup: ## Setup the application in a Nix shell
+	nix develop --command bash -c "make setup"
 
 .PHONY: status
 process: ## Process status
 	@ps aux | grep -E 'influxd|grafana' | grep -v grep
 
-.PHONY: start-app
-start-app: start-db start-grafana ## Start the application
+.PHONY: start
+start: start-db start-grafana ## Start the application
 	@echo "Starting the application..."
 	npm run start
 
@@ -27,10 +31,10 @@ setup-app: ## Setup the application
 	npm install
 
 .PHONY: stop
-stop: stop-db stop-grafana ## Stop the application
+stop-middleware: stop-db stop-grafana ## Stop the application
 
 .PHONY: setup
-setup: setup-db setup-grafana ## Setup the application
+setup: setup-db setup-grafana setup ## Setup the application
 
 .PHONY: clean
 clean: ## Clean the application
