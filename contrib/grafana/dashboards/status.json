@@ -2123,7 +2123,7 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-3h",
     "to": "now"
   },
   "timeRangeUpdatedDuringEditOrView": false,
@@ -2138,6 +2138,6 @@
   "timezone": "browser",
   "title": "AiSEG2 - Status",
   "uid": "edm5kbv1nk4qof",
-  "version": 10,
+  "version": 1,
   "weekStart": ""
 }
