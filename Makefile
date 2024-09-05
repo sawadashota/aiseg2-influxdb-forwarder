@@ -8,14 +8,6 @@ GRAFANA_HOME := $(GRAFANA_PATH)/share/grafana
 export GRAFANA_HOME
 export GF_PATHS_PROVISIONING=$(ROOT_DIR)/contrib/grafana
 
-.PHONY: nix-start
-nix-start: ## Start the application in a Nix shell
-	nix develop --command bash -c "make start"
-
-.PHONY: nix-setup
-nix-setup: ## Setup the application in a Nix shell
-	nix develop --command bash -c "make setup"
-
 .PHONY: status
 process: ## Process status
 	@ps aux | grep -E 'influxd|grafana' | grep -v grep

@@ -39,9 +39,10 @@ AiSEG2 はそのままでは HTTP しか喋らないため、LAN など境界内
 
 ### 事前準備
 
-1. ツールを動かすホスト環境に Git 及び Node.js を導入してください。
-2. AiSEG2 の IPアドレスを固定化してください。
-3. influxdb に格納先となる Bucket を用意してください。
+```shell
+cp .envrc.sample .envrc
+direnv allow
+```
 
 ### ツールのインストール
 
@@ -60,7 +61,7 @@ cd ./aiseg2-influxdb
 依存パッケージをインストールします。
 
 ```sh
-make nix-setup
+make setup
 ```
 
 設定ファイル（`.env`）をサンプルファイルからコピーしてご利用の環境に合わせて設定値を入れます。
@@ -74,5 +75,5 @@ cp .env.sample .env
 以下のコマンドで起動することができます。
 
 ```sh
-make nix-start
+make start
 ```
