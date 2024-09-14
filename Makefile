@@ -2,7 +2,8 @@ SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
 ROOT_DIR:=$(abspath .)
-GRAFANA_PATH := $(shell nix eval --raw nixpkgs\#grafana.outPath)
+GRAFANA_BIN_PATH := $(shell which grafana)
+GRAFANA_PATH := $(shell dirname $(shell dirname $(GRAFANA_BIN_PATH)))
 GRAFANA_HOME := $(GRAFANA_PATH)/share/grafana
 
 export GRAFANA_HOME
