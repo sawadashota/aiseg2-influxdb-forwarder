@@ -15,12 +15,12 @@ process: ## Process status
 .PHONY: start
 start: start-db start-grafana ## Start the application
 	@echo "Starting the application..."
-	npm run start
+	pnpm run start
 
 .PHONY: setup-app
 setup-app: ## Setup the application
 	@echo "Setting up the application..."
-	npm install
+	pnpm install
 
 .PHONY: stop
 stop-middleware: stop-db stop-grafana ## Stop the application
